@@ -1,5 +1,5 @@
-## 📰 Emias Polling Telegram Bot
-> Bot helps to automate the process of checking available appointments to doctors.
+## 📰 Unofficial Emias Polling Telegram Bot
+> Unofficial bot that helps to automate the process of checking available appointments to doctors.
 Instead of opening website every 15 minutes in the hope that an appointment with a doctor was freed, just set the reminder and bot will ping you.
 
 ### ✨ Features
