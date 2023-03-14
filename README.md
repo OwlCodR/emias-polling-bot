@@ -26,6 +26,6 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - Add yourself to admins/whitelist list and start `main.py`
 
 ### ✅ TODO
-- [] Wrap code with try & catch blocks
-- [] Make caching
-- [] Make `/stop` command
+- [ ] Wrap code with try & catch blocks
+- [ ] Make caching
+- [ ] Make `/stop` command
