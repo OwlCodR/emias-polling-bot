@@ -34,4 +34,3 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - [ ] Make `/stop` command
 - [ ] Make auto-making an appointment
 - [ ] Choosing a day and time of auto-appointment
-- [x] Add logging
