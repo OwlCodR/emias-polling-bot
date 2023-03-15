@@ -7,6 +7,16 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - Showing available specialists info and choosing one from them to remind
 - Multiple users support using async requests
 - Simple to add custom strings resources
+- Roles system
+
+### 💾 Commands
+- `/start`
+- `/help`
+- `/notify`
+- [Admin] `/admin add`
+- [Admin] `/admin remove`
+- [Admin] `/whitelist add`
+- [Admin] `/whitelist remove`
 
 ### 📦 Stack
 - Python
