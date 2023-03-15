@@ -18,10 +18,12 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 
 ### 🚀 Setup
 - Clone repository
-- Add `/config.json` with bot token: 
+- Add `config.json` with bot token: 
 ```json
 {
-    "token": "YOUR_TOKEN"
+    "token": "YOUR_TOKEN",
+    "strings_path": "YOUR_PATH",
+    "logs_path": "YOUR_PATH"
 }
 ```
 - Add yourself to admins/whitelist list and start `main.py`
