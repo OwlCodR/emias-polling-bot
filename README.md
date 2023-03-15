@@ -14,6 +14,7 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - json
 - requests
 - asyncio
+- logging
 
 ### 🚀 Setup
 - Clone repository
@@ -29,3 +30,6 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - [ ] Wrap code with try & catch blocks
 - [ ] Make caching
 - [ ] Make `/stop` command
+- [ ] Make auto-making an appointment
+- [ ] Choosing a day and time of auto-appointment
+- [x] Add logging

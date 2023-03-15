@@ -9,8 +9,9 @@ import string
 import asyncio
 from strings_manager import StringsManager
 from user import User
-
-DATA_TEXT = 'Установить уведомление'
+from bot import token as bot_token
+from bot import start
+import logging
 
 # Set your tag
 admins = []
@@ -23,21 +24,42 @@ users = {}
 tasks = {}
 
 # Set your paths
-configPath = 'YOUR_PATHS'
-stringsPath = 'YOUR_PATHS'
+configPath = 'config.json'
 
-headers = {'Content-type': 'application/json'}
+LOGGER_LEVEL = logging.DEBUG
+loggerFormat = "%(asctime)s | %(levelname)s\t| %(name)s.%(funcName)s:%(lineno)d | %(id)s | %(message)s "
 
-def loadToken():
+headers = None
+logger = None
+
+
+def init():
+    global logger
+    
+    headers = {'Content-type': 'application/json'}
+    
     with open(configPath) as f:
         d = json.load(f)
-        return d['token']
+        
+        bot_token = d['token']
+        stringsManager = StringsManager(d['strings_path'])
+        logsPath = d['logs_path']
+        
+        logging.basicConfig(
+            format=loggerFormat, 
+            filename=logsPath, 
+            encoding='utf-8', 
+            level=LOGGER_LEVEL
+        )
+        
+        logger = logging.getLogger('emias-polling-bot')
 
-stringsManager = StringsManager(stringsPath)
+        logger.info('init() finished')
 
-bot = telebot.TeleBot(loadToken(), parse_mode=None)
 
 async def poll(chatId, referralId):
+    logger.info('poll()...', extra={'id': chatId})
+    
     url = 'https://emias.info/api/emc/appointment-eip/v1/?getDoctorsInfo'
     json = {
         "jsonrpc": "2.0",
@@ -59,17 +81,26 @@ async def poll(chatId, referralId):
         places = medic['complexResource']
         for place in places: 
             if 'room' in place:
-                bot.send_message(chatId, stringsManager.getString('found_slot'), parse_mode="Markdown")
+                bot.send_message(
+                    chatId, 
+                    stringsManager.getString('found_slot'), 
+                    parse_mode="Markdown"
+                )
+
+    logger.info('poll() finished', extra={'id': chatId})
 
 
 async def startPolling(chatId, referralId, intervalMinutes: int):
+    logger.info('startPolling()...', extra={'id': chatId})
     while True:
         await poll(chatId, referralId)
-        print(f'Waiting for {intervalMinutes} mins...')
+        logger.info('Waiting for {intervalMinutes} mins...', extra={'id': chatId})
         await asyncio.sleep(intervalMinutes * 60)
 
 
 def sendSpecialists(message):
+    logger.info('sendSpecialists()...', extra={'id': message.chat.id})
+    
     user = users[message.chat.id]
 
     url = 'https://emias.info/api/emc/appointment-eip/v1/?getReferralsInfo'
@@ -109,7 +140,7 @@ def sendSpecialists(message):
     bot.send_message(message.chat.id, msg, parse_mode="Markdown")
 
 
-def dataHandler(message):
+def dataHandler(message):    
     bot.send_message(message.chat.id, stringsManager.getString('oms_input'))
     bot.register_next_step_handler(message, stepOmsHandler)
 
@@ -208,68 +239,7 @@ def chooseSpecialistStep(message):
 
     bot.register_next_step_handler(message, stepOmsHandler)
 
-
-@bot.message_handler(commands=["admin add"])
-def addAdmin(m):
-    if not checkIsAdmin(m):
-        return
-
-    tag = m.split()[2:][0]
-    admins.append(tag)
-
-
-@bot.message_handler(commands=["admin remove"])
-def removeAdmin(m):
-    if not checkIsAdmin(m):
-        return
-
-    tag = m.split()[2:][0]
-    admins.remove(tag)
-
-
-@bot.message_handler(commands=["whitelist add"])
-def addWhitelist(m):
-    if not checkIsAdmin(m):
-        return
-
-    tag = m.split()[2:][0]
-    whitelist.append(tag)
-
-
-@bot.message_handler(commands=["whitelist remove"])
-def removeWhitelist(m):
-    if not checkIsAdmin(m):
-        return
-
-    tag = m.split()[2:][0]
-    whitelist.remove(tag)
-
-
-@bot.message_handler(commands=["help", "start"])
-def start(m, res=False):
-    if not checkIsWhitelisted(m):
-        return
-
-    bot.send_message(m.chat.id, stringsManager.getString('start'), parse_mode="Markdown")
-
-
-@bot.message_handler(commands=["notify"])
-def stop(m, res=False):
-    if not checkIsWhitelisted(m):
-        return
-
-    dataHandler(m)
-
-
-@bot.message_handler(content_types=["text"])
-def handle_text(message):
-    if not checkIsWhitelisted(message):
-        return
-
-    if message.text.strip() == DATA_TEXT:
-        dataHandler(message)
-    else:
-        bot.send_message(message.chat.id, stringsManager.getString('unknown_command'))
         
 if __name__ == "__main__":
-    bot.polling(non_stop=True, interval=0)    
+    init()
+    start()
