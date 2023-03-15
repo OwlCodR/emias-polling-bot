@@ -16,7 +16,7 @@ DATA_TEXT = 'Установить уведомление'
 admins = []
 whitelist = []
 
-# chatd.id - user
+# chat.id - user
 users = {}
 
 # chat.id - task
@@ -60,6 +60,7 @@ async def poll(chatId, referralId):
         for place in places: 
             if 'room' in place:
                 bot.send_message(chatId, stringsManager.getString('found_slot'), parse_mode="Markdown")
+
 
 async def startPolling(chatId, referralId, intervalMinutes: int):
     while True:
@@ -218,7 +219,7 @@ def addAdmin(m):
 
 
 @bot.message_handler(commands=["admin remove"])
-def addAdmin(m):
+def removeAdmin(m):
     if not checkIsAdmin(m):
         return
 
@@ -227,7 +228,7 @@ def addAdmin(m):
 
 
 @bot.message_handler(commands=["whitelist add"])
-def addAdmin(m):
+def addWhitelist(m):
     if not checkIsAdmin(m):
         return
 
@@ -236,7 +237,7 @@ def addAdmin(m):
 
 
 @bot.message_handler(commands=["whitelist remove"])
-def addAdmin(m):
+def removeWhitelist(m):
     if not checkIsAdmin(m):
         return
 
@@ -250,16 +251,6 @@ def start(m, res=False):
         return
 
     bot.send_message(m.chat.id, stringsManager.getString('start'), parse_mode="Markdown")
-
-
-# @bot.message_handler(commands=["stop"])
-# def stop(m, res=False):
-#     if not checkIsWhitelisted(m):
-#         return
-    
-#     bot.send_message(m.chat.id, stringsManager.getString('stopped'))
-#     tasks[m.chat.id].cancel()
-#     tasks.pop(m.chat.id)
 
 
 @bot.message_handler(commands=["notify"])
