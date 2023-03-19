@@ -8,6 +8,8 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - Multiple users support using async requests
 - Simple to add custom strings resources
 - Roles system
+- Auto-appointment
+
 
 ### 💾 Commands
 - `/start`
@@ -42,5 +44,4 @@ Instead of opening website every 15 minutes in the hope that an appointment with
 - [ ] Wrap code with try & catch blocks
 - [ ] Make caching
 - [ ] Make `/stop` command
-- [ ] Make auto-making an appointment
 - [ ] Choosing a day and time of auto-appointment
